@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
-import './App.css';  // optional
+import './App.css';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -9,54 +9,3 @@ root.render(
     <App />
   </React.StrictMode>
 );
-import React, { useState } from 'react';
-import './App.css';
-
-function App() {
-  const [images, setImages] = useState([]);
-  const [roomType, setRoomType] = useState('Kitchen');
-  const [rfq, setRfq] = useState('');
-
-  const handleFiles = (e) => {
-    const files = Array.from(e.target.files).slice(0,3);
-    const urls = files.map(file => URL.createObjectURL(file));
-    setImages(urls);
-  };
-
-  const generateRfq = () => {
-    const items = {
-      "Kitchen": ["Modular cabinets", "Countertop provision", "Appliance provisions", "Lighting", "Storage accessories"],
-      "Living Room": ["Seating layout", "TV/media wall", "Coffee table", "Storage", "Lighting"],
-      "Bedroom": ["Bed", "Wardrobe", "Bedside units", "Dresser/Study corner", "Lighting"],
-      "Kids Room": ["Kids bed", "Wardrobe", "Study desk", "Shelving", "Safety features"],
-      "Home Office": ["Desk & chair", "Storage cabinets", "Task lighting", "Cable management", "Soundproofing"]
-    };
-    let brief = `RFQ – ${roomType}\n\nScope:\n`;
-    items[roomType].forEach((it, i) => brief += `${i+1}. ${it}\n`);
-    brief += images.length ? `\nDesign intent: Refer to ${images.length} attached images for inspiration.\n` : "\nDesign intent: Client preference to be defined with designer.\n";
-    setRfq(brief);
-  };
-
-  return (
-    <div style={{ padding: '20px', fontFamily: 'Arial' }}>
-      <h3>ITOA RFQ Brief Generator</h3>
-      <select value={roomType} onChange={e => setRoomType(e.target.value)}>
-        <option>Kitchen</option>
-        <option>Living Room</option>
-        <option>Bedroom</option>
-        <option>Kids Room</option>
-        <option>Home Office</option>
-      </select>
-      <br /><br />
-      <input type="file" accept="image/*" multiple onChange={handleFiles} />
-      <div style={{ display: 'flex', gap: '10px', marginTop:'10px' }}>
-        {images.map((src,i) => <img key={i} src={src} alt="" style={{ width:'120px' }}/>)}
-      </div>
-      <br />
-      <button onClick={generateRfq}>Generate RFQ Brief</button>
-      {rfq && <pre style={{ background:'#eee', padding:'10px', marginTop:'15px' }}>{rfq}</pre>}
-    </div>
-  );
-}
-
-export default App;
